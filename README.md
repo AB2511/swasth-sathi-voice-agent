@@ -21,7 +21,16 @@ Many people in rural Maharashtra are far more comfortable communicating in **Mar
 - 🌡️ **Symptom Explanation**: Explains symptoms in simple, clear language.
 - 🚑 **Basic First-Aid**: Provides immediate, practical first-aid advice.
 - 🏥 **Emergency Safety**: Recommends visiting nearby PHCs or qualified doctors for severe symptoms.
-- 🔊 **Murf Falcon TTS**: Uses Murf's verified native Marathi voice (**`mr-IN-prajakta`**).
+---
+
+## 🚀 Day 2 Updates
+
+- 🧩 **Structured System Prompt**: Implemented structured sections (Identity, Objectives, Knowledge, Language, Guardrails, Style).
+- 🗣️ **Multilingual & Code-Mixed Support**: Seamlessly understands Marathi, Hindi, English, Hinglish, and Marathlish.
+- 🛡️ **Medical Safety Guardrails**: Strict refusal to diagnose illnesses, prescribe medicines, or provide dosages.
+- 🚨 **Emergency Escalation Flow**: Immediate redirection to PHCs/hospitals for red-flag emergency symptoms (chest pain, severe bleeding, snake bites, etc.).
+- 🚫 **Out-of-Scope Handling**: Politely redirects non-health queries back to healthcare topics.
+- ⏱️ **Silence Handling**: Gentle prompts for user silence and polite session wrap-up.
 
 ---
 

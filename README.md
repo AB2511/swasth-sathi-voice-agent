@@ -152,7 +152,7 @@ swasth-sathi-voice-agent/
 ## 🗺️ 10-Day Roadmap
 
 - [x] **Day 1**: Core Marathi voice conversation, Murf Falcon integration & prompt engineering
-- [ ] **Day 2**: Conversation memory & context persistence
+- [x] **Day 2**: Conversation memory & context persistence
 - [ ] **Day 3**: Regional medicine lookup in simple terms
 - [ ] **Day 4**: Emergency triage detection & escalation
 - [ ] **Day 5**: Nearest PHC locator assistance

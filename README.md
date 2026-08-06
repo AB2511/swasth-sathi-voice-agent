@@ -8,107 +8,178 @@ Powered by **Murf Falcon**, **LiveKit**, **Deepgram**, and **Google Gemini**.
 
 ## 🎥 Demo
 
-(Add your LinkedIn video link here after publishing)
+*(Add your LinkedIn video demo link here after publishing)*
 
 ---
 
-## Problem Statement
+## 📌 Problem Statement
 
-Many people in rural Maharashtra are more comfortable communicating in Marathi than English.
+Many people in rural Maharashtra are far more comfortable communicating in **Marathi** than in English or technical medical terms. 
 
-Swasth Saathi aims to make basic healthcare guidance more accessible through natural voice conversations while encouraging users to seek professional medical care whenever necessary.
-
----
-
-## Features
-
-- 🎙️ Marathi-first voice conversations
-- 🩺 Answers common healthcare questions
-- 🌡️ Provides simple symptom explanations
-- 🚑 Gives basic first-aid guidance
-- 🏥 Recommends visiting nearby PHCs or doctors for serious symptoms
-- 🔊 Natural Marathi voice using Murf Falcon
+**Swasth Saathi** aims to make basic healthcare guidance accessible through conversational voice AI in Marathi. It assists users with health concerns, basic first aid, and symptom explanations, while prioritizing safety by advising users to consult Primary Health Centers (PHCs) or doctors for urgent situations.
 
 ---
 
-## Tech Stack
+## ✨ Features
 
-- Murf Falcon (Text-to-Speech)
-- LiveKit Agents
-- Deepgram Speech-to-Text
-- Google Gemini
-- Python
-- Next.js
+- 🎙️ **Marathi-First Voice Conversations**: Natural Marathi dialogue by default.
+- 🩺 **Healthcare Guidance**: Answers common health and wellness queries.
+- 🌡️ **Symptom Explanation**: Explains symptoms in simple, clear language.
+- 🚑 **Basic First-Aid**: Provides immediate, practical first-aid advice.
+- 🏥 **Emergency Safety**: Recommends visiting nearby PHCs or qualified doctors for severe symptoms.
+- 🔊 **Murf Falcon TTS**: Uses Murf's verified native Marathi voice (**`mr-IN-prajakta`**).
 
 ---
 
-## Project Structure
+## 🗣️ Sample Conversation
 
+> **User (मराठी)**  
+> *"मला दोन दिवसांपासून ताप आहे."*
+
+> **Swasth Saathi (स्वास्थ साथी)**  
+> *"तुम्हाला ताप आहे हे ऐकून वाईट वाटले. विश्रांती घ्या, भरपूर पाणी प्या आणि लवकरात लवकर जवळच्या प्राथमिक आरोग्य केंद्रात किंवा डॉक्टरांकडे तपासणी करून घ्या."*
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    A[🎙️ User Speaks] -->|Audio Stream| B[Deepgram STT]
+    B -->|Marathi / English Text| C[Google Gemini LLM]
+    C -->|Marathi Response| D[Murf Falcon TTS\nmr-IN-prajakta]
+    D -->|Audio Stream| E[LiveKit Transport]
+    E -->|Real-time Voice| F[🔊 User Hears Agent]
+
+    style A fill:#334155,stroke:#94a3b8,color:#fff
+    style B fill:#1e40af,stroke:#60a5fa,color:#fff
+    style C fill:#5b21b6,stroke:#a78bfa,color:#fff
+    style D fill:#065f46,stroke:#34d399,color:#fff
+    style E fill:#9a3412,stroke:#fb923c,color:#fff
+    style F fill:#334155,stroke:#94a3b8,color:#fff
 ```
-backend/
-frontend/
-```
 
 ---
 
-## Running Locally
+## ⚡ Why Murf Falcon?
 
-### Backend
+Swasth Saathi leverages **Murf Falcon** because it provides ultra-low latency speech synthesis with high pronunciation accuracy in regional Indian languages. This ensures real-time voice conversations feel responsive, natural, and comfortable for rural users.
 
+---
+
+## 🛠️ Tech Stack
+
+- **TTS (Text-to-Speech)**: Murf Falcon (`mr-IN-prajakta`)
+- **STT (Speech-to-Text)**: Deepgram (`nova-3`)
+- **LLM (Brain)**: Google Gemini (`gemini-3.5-flash-lite`)
+- **Transport**: LiveKit Agents Framework & WebRTC
+- **Backend**: Python 3.10+ (`uv` package manager)
+- **Frontend**: Next.js (TypeScript, TailwindCSS)
+
+---
+
+## 🔑 Environment Variables
+
+Create `.env.local` files in both `backend/` and `frontend/` directories:
+
+### `backend/.env.local`
+| Variable | Description |
+| :--- | :--- |
+| `LIVEKIT_URL` | LiveKit Cloud WebSocket URL |
+| `LIVEKIT_API_KEY` | LiveKit API Key |
+| `LIVEKIT_API_SECRET` | LiveKit API Secret |
+| `MURF_API_KEY` | Murf AI API Key |
+| `DEEPGRAM_API_KEY` | Deepgram API Key |
+| `GOOGLE_API_KEY` | Google Gemini API Key |
+
+### `frontend/.env.local`
+| Variable | Description |
+| :--- | :--- |
+| `LIVEKIT_URL` | LiveKit Cloud WebSocket URL |
+| `LIVEKIT_API_KEY` | LiveKit API Key |
+| `LIVEKIT_API_SECRET` | LiveKit API Secret |
+| `AGENT_NAME` | Set to `my-agent` for explicit agent dispatch |
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+- Python 3.10+
+- Node.js 18+ & `pnpm`
+- `uv` (Fast Python package installer)
+
+### 1. Backend Setup
 ```bash
 cd backend
 uv sync
-uv run python src/agent.py download-files
 uv run python src/agent.py dev
 ```
 
-### Frontend
-
+### 2. Frontend Setup
 ```bash
 cd frontend
 pnpm install
 pnpm dev
 ```
 
-Open
+Open `http://localhost:3000` in your browser and click **Start Audio** / **Connect** to talk to Swasth Saathi.
+
+---
+
+## 📁 Project Structure
 
 ```
-http://localhost:3000
+swasth-sathi-voice-agent/
+├── backend/
+│   ├── src/
+│   │   └── agent.py          # Swasth Saathi agent logic & Murf TTS configuration
+│   ├── .env.example          # Backend environment template
+│   └── pyproject.toml        # Python dependencies
+├── frontend/
+│   ├── app/                  # Next.js app routes & LiveKit token API
+│   ├── components/           # UI components & audio visualizer
+│   ├── .env.example          # Frontend environment template
+│   └── package.json          # Frontend dependencies
+└── README.md
 ```
 
 ---
 
-## Sample Conversation
+## 🗺️ 10-Day Roadmap
 
-**User**
-
-> मला दोन दिवसांपासून ताप आहे.
-
-**Swasth Saathi**
-
-> तुम्हाला ताप आहे हे ऐकून वाईट वाटले. विश्रांती घ्या, भरपूर पाणी प्या आणि लवकरात लवकर जवळच्या प्राथमिक आरोग्य केंद्रात किंवा डॉक्टरांकडे तपासणी करून घ्या.
-
----
-
-## Disclaimer
-
-This assistant provides general health information only.
-
-It does **not** diagnose diseases or prescribe medicines.
-
-Always consult a qualified healthcare professional for medical advice.
+- [x] **Day 1**: Core Marathi voice conversation, Murf Falcon integration & prompt engineering
+- [ ] **Day 2**: Conversation memory & context persistence
+- [ ] **Day 3**: Regional medicine lookup in simple terms
+- [ ] **Day 4**: Emergency triage detection & escalation
+- [ ] **Day 5**: Nearest PHC locator assistance
+- [ ] **Day 6**: Doctor visit checklist builder
+- [ ] **Day 7**: Maternal & child health education modules
+- [ ] **Day 8**: Offline/low-bandwidth resilience optimizations
+- [ ] **Day 9**: Safety & medical guardrail hardening
+- [ ] **Day 10**: Production deployment & final submission
 
 ---
 
-## Challenge
+## ⚠️ Disclaimer
 
-10 Days of AI Voice Agents – VoiceForBharat Edition
-
-Track:
-**Health Access**
+Swasth Saathi provides general health information only. It does **not** diagnose medical conditions or prescribe medications. Always consult a qualified medical professional or local Primary Health Center for medical diagnoses and treatment.
 
 ---
 
-## Author
+## 🙏 Acknowledgements
 
-Anjali Barge
+Built on top of the official [Murf LiveKit Starter](https://github.com/murf-ai/murf-livekit-starter) repository for the **10 Days of AI Voice Agents – VoiceForBharat Edition** challenge.
+
+Special thanks to:
+- **Murf AI**
+- **LiveKit**
+- **Deepgram**
+- **Google Gemini**
+
+---
+
+## 👤 Author
+
+**Anjali Barge**  
+*Hackathon Track: Health Access*

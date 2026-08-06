@@ -6,12 +6,6 @@ Powered by **Murf Falcon**, **LiveKit**, **Deepgram**, and **Google Gemini**.
 
 ---
 
-## 🎥 Demo
-
-*(Add your LinkedIn video demo link here after publishing)*
-
----
-
 ## 📌 Problem Statement
 
 Many people in rural Maharashtra are far more comfortable communicating in **Marathi** than in English or technical medical terms. 

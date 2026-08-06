@@ -149,21 +149,6 @@ swasth-sathi-voice-agent/
 
 ---
 
-## 🗺️ 10-Day Roadmap
-
-- [x] **Day 1**: Core Marathi voice conversation, Murf Falcon integration & prompt engineering
-- [x] **Day 2**: Conversation memory & context persistence
-- [ ] **Day 3**: Regional medicine lookup in simple terms
-- [ ] **Day 4**: Emergency triage detection & escalation
-- [ ] **Day 5**: Nearest PHC locator assistance
-- [ ] **Day 6**: Doctor visit checklist builder
-- [ ] **Day 7**: Maternal & child health education modules
-- [ ] **Day 8**: Offline/low-bandwidth resilience optimizations
-- [ ] **Day 9**: Safety & medical guardrail hardening
-- [ ] **Day 10**: Production deployment & final submission
-
----
-
 ## ⚠️ Disclaimer
 
 Swasth Saathi provides general health information only. It does **not** diagnose medical conditions or prescribe medications. Always consult a qualified medical professional or local Primary Health Center for medical diagnoses and treatment.

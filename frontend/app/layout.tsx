@@ -47,7 +47,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const hdrs = await headers();
   const appConfig = await getAppConfig(hdrs);
   const styles = getStyles(appConfig);
-  const { pageTitle, pageDescription, companyName, logo, logoDark } = appConfig;
+  const { pageTitle, pageDescription } = appConfig;
 
   return (
     <html
@@ -71,33 +71,23 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <header className="fixed top-0 left-0 z-50 hidden w-full flex-row justify-between p-6 md:flex">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://livekit.io"
-              className="scale-100 transition-transform duration-300 hover:scale-110"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logo} alt={`${companyName} Logo`} className="block size-6 dark:hidden" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={logoDark ?? logo}
-                alt={`${companyName} Logo`}
-                className="hidden size-6 dark:block"
-              />
-            </a>
-            <span className="text-foreground font-mono text-xs font-bold tracking-wider uppercase">
-              Built with{' '}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://docs.livekit.io/agents"
-                className="underline underline-offset-4"
-              >
-                LiveKit Agents
-              </a>
-            </span>
+          <header className="bg-background/80 border-border/50 fixed top-0 left-0 z-50 flex w-full flex-row items-center justify-between border-b p-4 backdrop-blur-md md:p-6">
+            <div className="flex items-center gap-2">
+              <span className="text-xl md:text-2xl">🩺</span>
+              <div>
+                <h1 className="text-sm font-bold tracking-wide text-emerald-800 md:text-base dark:text-emerald-400">
+                  स्वास्थ साथी
+                </h1>
+                <p className="text-muted-foreground text-[10px] md:text-xs">
+                  ग्रामीण महाराष्ट्रासाठी AI आरोग्य सहाय्यक
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full border border-emerald-300/40 bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                आरोग्य सेवा
+              </span>
+            </div>
           </header>
 
           {children}

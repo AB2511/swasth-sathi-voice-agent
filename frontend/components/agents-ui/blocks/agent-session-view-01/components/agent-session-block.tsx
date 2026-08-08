@@ -1,8 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Loader2, Mic, Volume2 } from 'lucide-react';
 import { AnimatePresence, type MotionProps, motion } from 'motion/react';
-import { useAgent, useSessionContext, useSessionMessages } from '@livekit/components-react';
+import {
+  useAgent,
+  useLocalParticipant,
+  useSessionContext,
+  useSessionMessages,
+} from '@livekit/components-react';
 import { AgentChatTranscript } from '@/components/agents-ui/agent-chat-transcript';
 import {
   AgentControlBar,
@@ -102,64 +108,27 @@ export function Fade({ top = false, bottom = false, className }: FadeProps) {
 }
 
 export interface AgentSessionView_01Props {
-  /**
-   * Message shown above the controls before the first chat message is sent.
-   *
-   * @default 'Agent is listening, ask it a question'
-   */
   preConnectMessage?: string;
-  /**
-   * Enables or disables the chat toggle and transcript input controls.
-   *
-   * @default true
-   */
   supportsChatInput?: boolean;
-  /**
-   * Enables or disables camera controls in the bottom control bar.
-   *
-   * @default true
-   */
   supportsVideoInput?: boolean;
-  /**
-   * Enables or disables screen sharing controls in the bottom control bar.
-   *
-   * @default true
-   */
   supportsScreenShare?: boolean;
-  /**
-   * Shows a pre-connect buffer state with a shimmer message before messages appear.
-   *
-   * @default true
-   */
   isPreConnectBufferEnabled?: boolean;
 
-  /** Selects the visualizer style rendered in the main tile area. */
   audioVisualizerType?: 'bar' | 'wave' | 'grid' | 'radial' | 'aura';
-  /** Primary hex color used by supported audio visualizer variants. */
   audioVisualizerColor?: `#${string}`;
-  /** Hue shift intensity used by certain visualizers. */
   audioVisualizerColorShift?: number;
-  /** Number of bars to render when `audioVisualizerType` is `bar`. */
   audioVisualizerBarCount?: number;
-  /** Number of rows in the visualizer when `audioVisualizerType` is `grid`. */
   audioVisualizerGridRowCount?: number;
-  /** Number of columns in the visualizer when `audioVisualizerType` is `grid`. */
   audioVisualizerGridColumnCount?: number;
-  /** Number of radial bars when `audioVisualizerType` is `radial`. */
   audioVisualizerRadialBarCount?: number;
-  /** Base radius of the radial visualizer when `audioVisualizerType` is `radial`. */
   audioVisualizerRadialRadius?: number;
-  /** Stroke width of the wave path when `audioVisualizerType` is `wave`. */
   audioVisualizerWaveLineWidth?: number;
-  /** Optional class name merged onto the outer `<section>` container. */
   className?: string;
 }
 
 export function AgentSessionView_01({
-  preConnectMessage = 'Agent is listening, ask it a question',
+  preConnectMessage = 'मी ऐकत आहे...',
   supportsChatInput = true,
-  supportsVideoInput = true,
-  supportsScreenShare = true,
   isPreConnectBufferEnabled = true,
 
   audioVisualizerType,
@@ -175,18 +144,23 @@ export function AgentSessionView_01({
   className,
   ...props
 }: React.ComponentProps<'section'> & AgentSessionView_01Props) {
+  const sectionProps = { ...props } as Record<string, unknown>;
+  delete sectionProps.supportsVideoInput;
+  delete sectionProps.supportsScreenShare;
   const session = useSessionContext();
   const { messages } = useSessionMessages(session);
   const [chatOpen, setChatOpen] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { state: agentState } = useAgent();
+  const { localParticipant } = useLocalParticipant();
+  const isUserSpeaking = localParticipant?.isSpeaking;
 
   const controls: AgentControlBarControls = {
     leave: true,
     microphone: true,
     chat: supportsChatInput,
-    camera: supportsVideoInput,
-    screenShare: supportsScreenShare,
+    camera: false,
+    screenShare: false,
   };
 
   useEffect(() => {
@@ -198,15 +172,56 @@ export function AgentSessionView_01({
     }
   }, [messages]);
 
+  // Determine speaker status label and icon
+  let statusText = 'मी ऐकत आहे...';
+  let isSpeakingState = false;
+  let isListeningState = true;
+  let isThinkingState = false;
+
+  if (agentState === 'speaking') {
+    statusText = 'स्वास्थ साथी बोलत आहे...';
+    isSpeakingState = true;
+    isListeningState = false;
+  } else if (agentState === 'thinking') {
+    statusText = 'विचार करत आहे...';
+    isThinkingState = true;
+    isListeningState = false;
+  } else if (isUserSpeaking) {
+    statusText = 'मी ऐकत आहे...';
+    isListeningState = true;
+  }
+
   return (
     <section
       ref={ref}
-      className={cn('bg-background relative z-10 h-full w-full overflow-hidden', className)}
-      {...props}
+      className={cn('bg-background relative z-10 h-full w-full overflow-hidden pt-20', className)}
+      {...sectionProps}
     >
-      <Fade top className="absolute inset-x-4 top-0 z-10 h-40" />
-      {/* transcript */}
+      {/* Top Speaker Status Indicator */}
+      <div className="absolute top-20 left-1/2 z-40 w-full max-w-md -translate-x-1/2 px-4 text-center">
+        <div
+          className={cn(
+            'inline-flex items-center gap-2.5 rounded-full border px-5 py-2.5 shadow-md backdrop-blur-md transition-all duration-300',
+            isSpeakingState &&
+              'animate-pulse border-emerald-500/40 bg-emerald-500/15 text-emerald-700 ring-2 ring-emerald-500/20 dark:text-emerald-300',
+            isListeningState &&
+              'border-teal-500/40 bg-teal-500/15 text-teal-700 dark:text-teal-300',
+            isThinkingState &&
+              'border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300'
+          )}
+        >
+          {isSpeakingState && <Volume2 className="size-5 animate-bounce" />}
+          {isListeningState && <Mic className="size-5 text-emerald-600 dark:text-emerald-400" />}
+          {isThinkingState && (
+            <Loader2 className="size-5 animate-spin text-amber-600 dark:text-amber-400" />
+          )}
+          <span className="text-sm font-semibold tracking-wide md:text-base">{statusText}</span>
+        </div>
+      </div>
 
+      <Fade top className="absolute inset-x-4 top-0 z-10 h-40" />
+
+      {/* Transcript */}
       <div className="absolute top-0 bottom-[135px] flex w-full flex-col md:bottom-[170px]">
         <AnimatePresence>
           {chatOpen && (
@@ -223,6 +238,7 @@ export function AgentSessionView_01({
           )}
         </AnimatePresence>
       </div>
+
       {/* Tile layout */}
       <TileLayout
         chatOpen={chatOpen}
@@ -236,12 +252,12 @@ export function AgentSessionView_01({
         audioVisualizerGridColumnCount={audioVisualizerGridColumnCount}
         audioVisualizerWaveLineWidth={audioVisualizerWaveLineWidth}
       />
-      {/* Bottom */}
+
+      {/* Bottom controls */}
       <motion.div
         {...BOTTOM_VIEW_MOTION_PROPS}
         className="absolute inset-x-3 bottom-0 z-50 md:inset-x-12"
       >
-        {/* Pre-connect message */}
         {isPreConnectBufferEnabled && (
           <AnimatePresence>
             {messages.length === 0 && (
@@ -250,7 +266,7 @@ export function AgentSessionView_01({
                 duration={2}
                 aria-hidden={messages.length > 0}
                 {...SHIMMER_MOTION_PROPS}
-                className="pointer-events-none mx-auto block w-full max-w-2xl pb-4 text-center text-sm font-semibold"
+                className="pointer-events-none mx-auto block w-full max-w-2xl pb-4 text-center text-sm font-semibold text-emerald-800 dark:text-emerald-300"
               >
                 {preConnectMessage}
               </MotionMessage>

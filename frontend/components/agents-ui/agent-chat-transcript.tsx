@@ -11,40 +11,12 @@ import {
 } from '@/components/ai-elements/conversation';
 import { Message, MessageContent, MessageResponse } from '@/components/ai-elements/message';
 
-/**
- * Props for the AgentChatTranscript component.
- */
 export interface AgentChatTranscriptProps extends ComponentProps<'div'> {
-  /**
-   * The current state of the agent. When 'thinking', displays a loading indicator.
-   */
   agentState?: AgentState;
-  /**
-   * Array of messages to display in the transcript.
-   * @defaultValue []
-   */
   messages?: ReceivedMessage[];
-  /**
-   * Additional CSS class names to apply to the conversation container.
-   */
   className?: string;
 }
 
-/**
- * A chat transcript component that displays a conversation between the user and agent.
- * Shows messages with timestamps and origin indicators, plus a thinking indicator
- * when the agent is processing.
- *
- * @extends ComponentProps<'div'>
- *
- * @example
- * ```tsx
- * <AgentChatTranscript
- *   agentState={agentState}
- *   messages={chatMessages}
- * />
- * ```
- */
 export function AgentChatTranscript({
   agentState,
   messages = [],
@@ -56,13 +28,24 @@ export function AgentChatTranscript({
       <ConversationContent>
         {messages.map((receivedMessage) => {
           const { id, timestamp, from, message } = receivedMessage;
-          const locale = navigator?.language ?? 'en-US';
+          const locale =
+            typeof navigator !== 'undefined' ? (navigator?.language ?? 'en-US') : 'en-US';
           const messageOrigin = from?.isLocal ? 'user' : 'assistant';
+          const speakerLabel = from?.isLocal ? 'तुम्ही' : 'स्वास्थ साथी';
           const time = new Date(timestamp);
-          const title = time.toLocaleTimeString(locale, { timeStyle: 'full' });
+          const title = time.toLocaleTimeString(locale, { timeStyle: 'short' });
 
           return (
             <Message key={id} title={title} from={messageOrigin}>
+              <div
+                className={`mb-1 text-[11px] font-semibold tracking-wide ${
+                  from?.isLocal
+                    ? 'text-right text-emerald-700 dark:text-emerald-400'
+                    : 'text-left text-teal-700 dark:text-teal-400'
+                }`}
+              >
+                {speakerLabel}
+              </div>
               <MessageContent>
                 <MessageResponse>{message}</MessageResponse>
               </MessageContent>
@@ -70,7 +53,12 @@ export function AgentChatTranscript({
           );
         })}
         <AnimatePresence>
-          {agentState === 'thinking' && <AgentChatIndicator size="sm" />}
+          {agentState === 'thinking' && (
+            <div className="flex items-center gap-2 py-2 text-xs text-amber-600 dark:text-amber-400">
+              <AgentChatIndicator size="sm" />
+              <span>स्वास्थ साथी विचार करत आहे...</span>
+            </div>
+          )}
         </AnimatePresence>
       </ConversationContent>
       <ConversationScrollButton />
